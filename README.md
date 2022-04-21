@@ -1,8 +1,6 @@
 # OACP
 
-# oacpv2
-
-Setup to run oacpv2 application in local laptop
+Setup to run oacp application in local laptop
 ================================================
 
 **1.Eclipse IDE** for Enterprise Java and Web Developers - 2021-12
@@ -62,6 +60,6 @@ ssh username@openaccessv2.library.manchester.ac.uk
 
 after log into virtual machine, copy WAR file to /srv/webapps/ directory
 ```
-sudo cp oacpv2.war /srv/webapp/ROOT.war
+sudo cp oacp.war /srv/webapp/ROOT.war
 ```
 
