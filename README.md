@@ -11,7 +11,7 @@ Setup to run oacpv2 application in local laptop
 
 **3. git clone repository from gitHub**
 ```
-git clone https://github.com/UoMLibrary/oacpv2.git
+git clone https://github.com/UoMLibrary/OACP.git
 ```
 
 **4. Import project to Eclipse.** <br/>
@@ -19,7 +19,7 @@ Eclipse-->"File"-->"Existing Maven Projects"
 
 **5. PostgreSQL.**
 ```
-CREATE USER oacp WITH PASSWORD 'bluebanana';
+CREATE USER **** WITH PASSWORD '******';
 CREATE DATABASE oacp;
 ```
 
@@ -46,7 +46,7 @@ Deploy OACPV2
 
 **4. copy WAR file into Virtual machines.** <br/>
 ```
-scp oacpv2.war p55613jl@openaccessv2-test.library.manchester.ac.uk://home/p55613jl
+scp oacp.war username@openaccessv2-test.library.manchester.ac.uk://home/username
 ```
 
 **5.Run on Virtual machines**  <br/>
@@ -64,14 +64,4 @@ after log into virtual machine, copy WAR file to /srv/webapps/ directory
 ```
 sudo cp oacpv2.war /srv/webapp/ROOT.war
 ```
-
-
-### Virtual machines (Test and PRD) ###
-Web app location: /srv/webapps/ROOT.war  
-Test VM: openaccessv2-test.library.manchester.ac.uk  
-PRD VM: openaccessv2.library.manchester.ac.uk  
-
-### URLs (Test and PRD) ###
-Test: https://openaccessv2-test.library.manchester.ac.uk/   
-PRD: https://openaccessv2.library.manchester.ac.uk/ 
 
