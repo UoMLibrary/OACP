@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head th:replace="fragments/header :: html_head" >
+	</head>
+	
+	<body>
+		 
+		<header th:include="fragments/header :: menu"></header>
+		<div class="container">
+			<h2>Create New Record</h2>
+		<form th:action="@{/publication}" method="get">
+
+			<div class="mb-3">
+				<label class="form-label">Pure ID</label> <input type="text"
+					th:name="pureId" class="form-control" id="inputPureid"
+					onkeyup="success()" />
+			</div>
+
+			<p class="alert alert-danger" th:if="${error}" th:text="${error}"></p>
+
+
+			<button type="submit" id="submitPureid" class="btn btn-primary"
+				disabled   onclick="return DisplayProgressMessage(this, 'Processing...');">Submit</button>
+
+		</form>
+
+	</div> 
+	
+	<div th:if="${editpure}" id="PublicationModal">
+		<th:block th:replace="fragments/modal :: modal('editpure')"></th:block>
+		<input type="hidden" th:value="${editpure}" id="pureid"/>
+	</div>		
+		
+		<div class="submit-progress">
+		     <i class="fa fa-2x fa-spinner fa-spin"></i>
+		    <label>Please wait while processing Data...</label>
+		</div>
+		
+		<footer class="footer" th:include="fragments/footer :: footer"></footer>   
+		
+		
+	</body>
+	
+	<script>
+	
+	 $( document ).ready(function() {
+		    if($('#PublicationModal').length){
+		    	var pureId = $("#pureid").val();
+		    	$('#editpure').modal({
+		    		  show: true
+		    		});
+		    	$('#editpure').find('#information').remove();
+		    	$('.modal-title').text("Notification");
+		    	$('#editpure').find('.modal-body').text("This record already exists! " + pureId);
+				
+				$('#editpure').find('#confirm').css({
+					"display" : "block"
+				});
+				
+				$('#editpure').find('#confirm').prop("href", "/publications/"+pureId);
+				
+		    }
+		    
+		    
+		    
+		});
+	 
+	 function success() {
+		 
+	   	 if(document.getElementById("inputPureid").value==="") { 
+	               document.getElementById('submitPureid').disabled = true; 
+	           } else { 
+	               document.getElementById('submitPureid').disabled = false;
+	           }
+	       }
+	 
+	 function DisplayProgressMessage(ctl, msg) {
+		 setTimeout(function () {
+			 $(ctl).prop("disabled", true);
+		     $(ctl).text(msg);
+		     $(".submit-progress").css({ display: 'block'});
+		 },30);
+	    return true;
+	    }
+	 
+	 </script>	
+
+</html>

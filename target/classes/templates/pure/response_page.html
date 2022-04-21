@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: html_head"></head>
+<body>
+
+	<header th:include="fragments/header :: menu">></header>
+	<div class="container">
+		<h1>Create New Record</h1>
+		<form th:action="@{/publication/create}" th:object="${purerecord}"
+			method="post">
+			<div class="card border-dark">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-md-11">
+							<i class="fas fa-users"></i> Record Details
+						</div>
+					</div>
+				</div>
+				<div class="card-body text-dark">
+
+
+					<div class="row">
+						<div class="col-6">
+							<strong>Pure ID:</strong>
+							<p th:text="*{pureId}" />
+
+							<strong>Pure Status:</strong>
+							<p th:text="*{publicationStatus} ?: '-'" />
+
+							<strong>Title:</strong>
+							<p th:text="*{title} ?: '-'" />
+
+							<strong>Journal:</strong>
+							<p th:text="*{journal} ?: '-'" />
+
+							<strong>Output Type:</strong>
+							<p th:text="*{outputType} ?: '-'" />
+
+							<strong>DOI:</strong>
+							<p>
+								<a th:href="*{doi}" target="_blank"> <span th:text="*{doi}"></span>
+								</a>
+							</p>
+
+							<strong>Pure Portal:</strong>
+							<p>
+								<a th:href="*{portalUrl}" target="_blank"> <span
+									th:text="*{portalUrl}"></span>
+								</a>
+							</p>
+
+
+						</div>
+						<div class="col-3">
+							<strong>Accepted Date:</strong>
+							<p th:text="*{#dates.format(acceptedDate, 'dd/MM/yyyy')} ?: '-'"></p>
+							
+							
+							<strong>ePub Date:</strong>
+							<p th:text="*{#dates.format(ePublicationDate, 'dd/MM/yyyy')} ?: '-'"></p>
+
+
+							<strong>Published Date:</strong>
+							<p th:text="*{#dates.format(publicationDate, 'dd/MM/yyyy')} ?: '-'"></p>
+
+
+							<strong>Publisher Name:</strong>
+							<p th:text="*{publisherName} ?: '-'" />
+
+
+						</div>
+
+						<div class="col-3">
+							<strong>Pure Record Creator</strong>
+							<p th:text="*{createdBy} ?: '-'" />
+
+
+							<strong>Pure Record Created Date</strong>
+							<p th:text="*{#dates.format(createdDate, 'dd/MM/yyyy HH:mm')} ?: '-'"></p>
+							
+							
+							<strong>Pure Record Last Modified Date</strong>
+							<p th:text="*{#dates.format(pure_last_modified_date, 'dd/MM/yyyy HH:mm')} ?: '-'"></p>
+							
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+			<br />
+			<div class="card border-dark">
+				<div class="card-header">
+					<i class="fas fa-users"></i> Authors & Organisations
+				</div>
+				<div class="card-body text-dark">
+					<div class="table-responsive-lg">
+						<table class="table">
+							<tr th:if="*{authors}" th:each="author,custStat : *{authors}">
+								<td width="50%"><a class="collapsed" data-toggle="collapse"
+									th:href="'#demo'+${custStat.index}"
+									th:text="${author.forename} + ' ' +  ${author.surname}"></a>
+									<div th:id="'demo'+ ${custStat.index}" class="collapse">
+										<p>
+											<strong>First Name: </strong> <label
+												th:text="${author.forename}"></label>
+										</p>
+										<p>
+											<strong>Last Name: </strong> <label
+												th:text="${author.surname}"></label>
+										</p>
+										<p>
+											<strong>SPOT ID: </strong> <label
+												th:text="${author.spotID} ?: '-'"></label>
+										</p>
+										<p>
+											<strong>Email Address: </strong> <label
+												th:text="${author.emailAddress} ?: '-'"></label>
+										</p>
+									</div></td>
+								<td width="50%"><a data-toggle="collapse"
+									th:href="'#demo2'+${custStat.index}"
+									th:text="${author.faculty_name} ?: '-'"></a>
+									<div th:id="'demo2'+${custStat.index}" class="collapse">
+										<p>
+											<strong>School Name: </strong> <label
+												th:text="${author.school_name} ?: '-'"></label>
+										</p>
+										<p>
+											<strong>Faculty Name: </strong> <label
+												th:text="${author.faculty_name} ?: '-'"></label>
+										</p>
+									</div></td>
+							</tr>
+
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<br />
+			 
+			<h3>Update Record</h3>
+			<div class="row">
+				<div class="col">
+					<label>Deposit Route</label> <select id="depositRoute" class="form-control"
+						th:field="*{deposit_route}">
+						<option value="">--Please Select--</option>
+						<option value="External">External</option>
+						<option value="Gateway - Green">Gateway - Green</option>
+						<option value="Gateway - Gold">Gateway - Gold</option>
+						<option value="Pure">Pure</option>
+						<option value="Transformative agreement">Transformative agreement</option>
+					</select>
+				</div>
+				<div class="col">
+					<label>Gateway Depositor</label> 
+					<input type="text" id="GatewayDepositor"
+						th:field="*{gateway_depositor}" class="form-control" />
+				</div>
+
+			</div>
+
+			<br />
+			<div class="row">
+
+			
+				<div class="col">
+					<p>Help Raise Visibility</p>
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-outline-dark active"> <input
+							type="radio" name="options" id="option1" value="0"
+							th:field="*{help_raise_visibility}"> No
+						</label> <label class="btn btn-outline-dark"> <input type="radio"
+							name="options" id="option3" value="1"
+							th:field="*{help_raise_visibility}"> Yes
+						</label>
+					</div>
+				</div>
+
+				<div class="col">
+					<p>REF Compliance Exception</p>
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-outline-dark active"> <input
+							type="radio" name="options" value="0" autocomplete="off"
+							th:field="*{ref_compliance_exception}"> No
+						</label> <label class="btn btn-outline-dark"> <input type="radio"
+							name="options" value="1" autocomplete="off"
+							th:field="*{ref_compliance_exception}"> Yes
+						</label>
+					</div>
+				</div>
+				 <div class="col">
+					<p>Data Access Statement</p>
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-outline-dark active"> <input
+							type="radio" name="options" id="option1" value="0"
+							th:field="*{data_access_statement}"> No
+						</label> <label class="btn btn-outline-dark"> <input type="radio"
+							name="options" id="option3" value="1"
+							th:field="*{data_access_statement}"> Yes
+						</label>
+					</div>
+				</div>
+				<div class="col">
+					<p>Rights Retention Statement</p>
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-outline-dark active"> <input
+							type="radio" name="options" id="option1" value="0"
+							th:field="*{rights_retention_statement}"> No
+						</label> <label class="btn btn-outline-dark"> <input type="radio"
+							name="options" id="option3" value="1"
+							th:field="*{rights_retention_statement}"> Yes
+						</label>
+					</div>
+				</div>
+				
+			</div>
+
+
+			<br />
+			<div class="row">
+				<div class="col">
+					<label>Record Status</label> <select class="form-control"
+						th:field="*{record_status}">
+						<option value="">--Please Select--</option>
+						<option value="AAM deposited - awaiting publication">AAM deposited - awaiting publication</option>
+						<option value="AAM deposited - published">AAM deposited - published</option>
+						<option value="Information required">Information required</option>
+					</select>
+				</div>
+				<div class="col">
+					<label>REF Compliance Status</label> <select class="form-control"
+						th:field="*{compliance_status}">
+						<option value="">--Please Select--</option>
+						<option value="Green - internal">Green - internal</option>
+						<option value="Green - external">Green - external</option>
+						<option value="Gold - internal">Gold - internal</option>
+						<option value="Gold - external">Gold - external</option>
+						<option value="Not compliant">Not compliant</option>
+						<option value="Exception applied">Exception applied</option>
+					</select>
+				</div>
+			</div>
+
+			<br />
+			<div class="row">
+				 <div class="col-2">
+					<p><label>UKRI</label></p>
+					<div class="btn-group btn-group-toggle show-ukriStatus" data-toggle="buttons">
+						<label class="btn btn-outline-dark active"> <input
+							type="radio" name="options" id="option1" value="0"
+							th:field="*{ukri_S_Flag}">No</label> 
+						<label class="btn btn-outline-dark"> <input type="radio"
+							name="options" id="option3" value="1"
+							th:field="*{ukri_S_Flag}"> Yes
+						</label>
+					</div>
+				</div>
+				 
+				<div class="col-4">
+					<div style="display:none" id="Ukricompliance">
+						<label>UKRI Compliance Status</label> 
+						<select id="Ukricompliance" class="form-control"
+							th:field="*{ukri_compliance_status}">
+							<option value="" selected>--Please Select--</option>
+							<option value="Green - internal">Green - internal</option>
+							<option value="Green - external">Green - external</option>
+							<option value="Gold - internal">Gold - internal</option>
+							<option value="Gold - external">Gold - external</option>
+							<option value="Not compliant">Not compliant</option>
+							<option value="Exception applied">Exception applied</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="col-6">
+					<label>Length of Embargo</label> <select class="form-control"
+						th:field="*{embargo_length}">
+						<option value="">--Please Select--</option>
+						<option value="0">0 Month</option>
+						<option value="6">6 Months</option>
+						<option value="12">12 Months</option>
+						<option value="18">18 Months</option>
+						<option value="24">24 Months</option>
+						<option value="36">36 Months</option>
+
+					</select>
+				</div>
+				 
+			</div>
+		
+			<br />
+			<div class="row">
+				<div class="col-6">
+					<label>File URL:</label>
+					<textarea class="form-control" rows="4" cols="50"
+						th:field="*{fileUrl}"></textarea>
+						
+					<br/>
+					<label>Note</label> 
+					<textarea class="form-control" id="noteText"></textarea>
+					<p style="display: none" class="alert alert-warning" id="NoteAlert">Please input Funder!</p> 
+                    <input type="button" id="addNoteBtn" class="btn btn-light" value="Add Notes" />
+				</div>
+				
+				<div class="col-6">
+                         <div class="card">
+                           <div class="card-header">
+                            Notes
+                          </div>    
+                          <div class="card-body">
+                               
+                              <ul id="NoteList" class="list-group list-group-flush">
+                              		<li id="noNote" class="list-group-item">No Notes have been added</li>
+                              </ul>
+                          </div>
+                        </div> 
+                    </div>
+				
+			</div>
+			
+			<br />
+			<div class="row">
+				<div class="col">
+					<a href="/" class="btn btn-light btn-lg btn-block"> Cancel </a>
+				</div>
+				<div class="col">
+					<button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
+				</div>
+			</div>
+			
+		
+		</form>
+	</div>
+	<footer class="footer" th:include="fragments/footer :: footer"></footer>
+
+</body>
+<script>
+	$(document).ready(function() {
+		
+		//If Pure, external or transformative agreemnt is chosen,
+		//grey out Gateway Depositor field
+		
+		var depositvalue = $( "#depositRoute option:selected" ).val();
+		if(depositvalue=='Pure' || depositvalue=='External' || depositvalue =='Transformative agreemnt'){
+			$("#GatewayDepositor").prop('disabled', true);
+		}
+		
+		$("#depositRoute").change(function() {
+			depositvalue = $( "#depositRoute option:selected" ).val();
+			if(depositvalue=='Pure' || depositvalue=='External' || depositvalue =='Transformative agreement'){
+				$("#GatewayDepositor").prop('disabled', true);
+			}else{
+				$("#GatewayDepositor").prop('disabled', false);
+			}
+		});
+		
+		
+		$('.show-ukriStatus .btn').on("click",function(){
+			   
+			   var ukristatus = $(this).find('input[type=radio]').val();
+			   if(ukristatus == '1'){
+				   $('#Ukricompliance').show(500);
+			   }
+			   if(ukristatus == '0'){
+				   $('#Ukricompliance').hide(500)
+			   }
+		})
+		
+		/* add new note */
+		$("#addNoteBtn").click(function() {
+
+					var noteText = $("#noteText").val();
+					if (noteText != "") {
+						$("#NoteAlert").css({
+							"display" : "none"
+						});
+
+						if ($("#noNote").length > 0) {
+							$("#noNote").remove();
+						}
+						$("#NoteList").append(
+								"<li class='list-group-item'><i class='fas fa-times delete_icon'></i>  "
+										+"<input style=' border: none;' name='notelist' value='"+noteText+"'></input></li>");
+						$("#noteText").val("");
+					} else {
+						$("#NoteAlert").css({
+							"display" : "block"
+						});
+					}
+				});
+
+		/* delete notes on page show */
+		$("#NoteList").on("click","i.delete_icon",function(e) {
+							$(this).closest('li').remove();
+							if ($("#NoteList").find("li").length == 0) {
+								$("#NoteList")
+										.append(
+												"<li class='list-group-item' id='noNote'>No Funders have been added</li>");
+							}
+						});
+
+		/* end of add note */
+					
+	})
+</script>
+</html>
+

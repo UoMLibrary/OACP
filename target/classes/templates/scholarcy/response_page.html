@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<title>Getting Started: Handling Form Submission</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+
+	<h1>Result</h1>
+
+	<h5>Filename:</h5>
+	<p th:text="${knowledgeRepsonse.filename} ?: '-'" />
+
+	<h5>Metadata:</h5>
+	<div th:if="${knowledgeRepsonse.metadata} != null">
+		<p th:text="'Title: '+ ${knowledgeRepsonse.metadata.title} ?: '-'" />
+		<p th:text="'Author: '+ ${knowledgeRepsonse.metadata.author} ?: '-'" />
+		<p th:text="'Pages: '+ ${knowledgeRepsonse.metadata.pages} ?: '-'" />
+		<p th:text="'Date: '+ ${knowledgeRepsonse.metadata.date} ?: '-'" />
+	</div>
+	<div th:if="${knowledgeRepsonse.metadata} == null">
+		<p>No Metadata information</p>
+	</div>
+
+
+	<h5>Highlight:</h5>
+	<div th:each="highlight : ${knowledgeRepsonse.highlights}">
+		<p th:text="${highlight} ?: '-'" />
+	</div>
+ 
+	<h5>Headline:</h5>
+	<p th:text="${knowledgeRepsonse.headline} ?: '-'" />
+
+	<h5>Key statements:</h5>
+	<div th:each="key_statement : ${knowledgeRepsonse.key_statements}">
+		<p th:text="${key_statement} ?: '-'" />
+	</div>
+
+	<!--   <a href="/scholarcydata">Try another pdf</a> -->
+
+
+
+</body>
+</html>

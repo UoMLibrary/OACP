@@ -1,0 +1,190 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	/* Margin bottom by footer height */
+	margin-bottom: 60px;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	/* Set the fixed height of the footer here */
+	height: 60px;
+	line-height: 60px; /* Vertically center the text there */
+	background-color: white;
+}
+
+/* Custom page CSS
+-------------------------------------------------- */
+body>.container {
+	padding: 60px 0 0;
+	position: relative;
+
+	/* animation: slideIn 1s ease-in-out forwards; */
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(500px) scale(.2);
+  }
+  100% {
+    transform: translateX(0px) scale(1);
+  }
+}
+
+
+.footer>.container {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+code {
+	font-size: 80%;
+}
+
+.listpublication {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+.userlist {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+
+/* json style for audit page
+-------------------------------------------------- */
+pre {
+		   background-color: ghostwhite;
+		   border: 1px solid silver;
+		   padding: 10px 20px;
+		   margin: 20px; 
+		   	}
+	.json-key {
+		   color: brown;
+		   	}
+	.json-value {
+		   color: navy;
+		   	}
+	.json-string {
+		   color: olive;
+		   }
+
+
+
+/* publication list page datatable style
+-------------------------------------------------- */
+#publicationSearch{
+	width: 100%;
+	border-collapse: separate;
+	border-spacing:  1em 1em;
+}
+#publicationSearch .pureid{
+	width:15%;
+}
+#publicationSearch .doi{
+	width:30%;
+}
+
+table#publicationTable.dataTable{
+	
+  box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+
+table#publicationTable.dataTable tbody tr:nth-child(odd) {
+  background-color: rgba(139, 116, 208, 0.08);
+}
+
+table#publicationTable.dataTable tbody tr:hover {
+  background-color: rgba(139, 116, 208, 0.12);
+}
+
+table#publicationTable.dataTable tbody tr:hover > .sorting_1 {
+  background-color:  rgba(139, 116, 208, 0.12);
+}
+
+
+/* audit list page datatable style
+-------------------------------------------------- */
+
+table#auditTable.dataTable{
+  box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+
+
+table#auditTable.dataTable tbody tr:nth-child(odd) {
+  background-color: rgba(139, 116, 208, 0.08);
+}
+
+table#auditTable.dataTable tbody tr:hover {
+  background-color: rgba(139, 116, 208, 0.12);
+}
+
+table#auditTable.dataTable tbody tr:hover > .sorting_1 {
+  background-color:  rgba(139, 116, 208, 0.12);
+}
+
+
+
+.userlist {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+
+div.dataTables_wrapper div.dataTables_processing {
+   top: 0;
+   left:0.5;
+}
+
+
+.potentialli-published{
+	color: #0c5460;
+    background-color: #d1ecf1;
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    display: block;
+}
+
+
+ .submit-progress-bg {
+        background-color: lightgray;
+        opacity: .5;
+    }
+ 
+ .submit-progress {
+ 	display: none;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    height: 6em;
+    padding-top: 2em;
+    width: 20em;
+    margin-left: -10em;
+    padding-left: 2.1em;
+    background-color: rgb(128, 0, 128);
+    color: white;
+    -webkit-border-radius: 0.4em;
+    -moz-border-radius: 0.4em;
+    border-radius: 0.4em;
+    box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+    -moz-box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+}   
+
+
+    

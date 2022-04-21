@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: html_head">
+</head>
+
+<body>
+	<header th:include="fragments/header :: menu"> </header>
+	<!-- Begin page content -->
+	<div class="container">
+		<h1>Welcome to OACP_V2</h1>
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Create a New Record</h5>
+						<p class="card-text">Search Pure for a record based on the
+							supplied Pure ID. Allows you to add and ammend additional data to
+							the record.</p>
+						<!--  <a href="/puredata" class="btn btn-primary"> -->
+						<br /> <a href="/puredata" class="btn btn-primary"> View <i
+							class="far fa-arrow-alt-circle-right"></i></a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Search Existing Records</h5>
+						<p class="card-text">Filter, view and edit existing records in
+							the database in a customised table. Allows you to delete, sync
+							with Pure and Crossref and export records to CSV.</p>
+						<a href="/publications/all" class="btn btn-primary">View <i
+							class="far fa-arrow-alt-circle-right"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style="padding: 10px 0">
+			<div class="col-sm-6">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">View Audit Logs</h5>
+						<p class="card-text">View the last 7 days of events that have
+							occured within OACP, such as modifications to a record and failed
+							sync jobs.</p>
+						<a href="/audit/all" class="btn btn-primary">View <i
+							class="far fa-arrow-alt-circle-right"></i></a>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Manage Users</h5>
+						<p class="card-text">Create new users and update existing users!</p>
+							<br />
+							 
+						<a href="/user" class="btn btn-primary">View 
+						<i class="far fa-arrow-alt-circle-right"></i></a>
+							 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer class="footer" th:include="fragments/footer :: footer"></footer>
+
+</body>
+</html>
+

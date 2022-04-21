@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: html_head">
+</head>
+
+<body>
+	<header th:include="fragments/header :: menu"></header>
+	<div class="container">
+		<h2>Manage Users</h2>
+
+		<form th:action="@{/users/updateUsers}" method="post"
+			th:object="${users}"></form>
+
+		<button id="userName" type="submit"
+			onclick="document.getElementById('userName').style.display='none'">Delete
+			User</button>
+		<div id="userName" class="modal">
+			<span
+				onclick="document.getElementById('userName').style.display='none'">
+			</span>
+			<form class="modal-content" th:action="/popup_page.php">
+				<div class="container">
+					<h1>Do you want to delete this user?</h1>
+					<div class="clearfix">
+						<button id="userName" type="submit" class="cancel btn"
+							onclick="document.getElementById('userName').style.display='none'">
+							Cancel</button>
+						<button id="userName" type="submit" class="cancel btn"
+							onclick="document.getElementById('userName').style.display='none'">
+							Delete</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<footer class="footer" th:include="fragments/footer :: footer"></footer>
+
+</body>
+
+<script>
+	function success() {
+
+		if (document.getElementById("userName").value === "") {
+			document.getElementById('submitUserDetails').disabled = true;
+		} else {
+			document.getElementById('submitUserDetails').disabled = false;
+		}
+	}
+	function success1() {
+
+		if (document.getElementById("userName").value === "") {
+			document.getElementById('submitUserDetails').disabled = true;
+		} else {
+			document.getElementById('submitUserDetails').disabled = false;
+		}
+	}
+
+	var modal = document.getElementById('userName');
+	window.onclick = function(event) {
+		if (even.target == modal) {
+			modal.style.display = "none";
+		}
+	}
+</script>
+
+</html>

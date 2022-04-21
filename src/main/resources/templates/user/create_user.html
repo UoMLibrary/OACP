@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+</head>
+
+<body>
+	<div class="container">
+		<h2>Create New User</h2>
+
+		<form id="addUser" th:object="${userRecord}">
+			<div class="mb-3" >
+				<label class="form-label">User Name</label> 
+				<input type="text" id="userName"
+					th:field="*{userName}" class="form-control"/>
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label">Name</label> 
+				<input type="text" id="fullName"
+					th:field="*{fullName}" class="form-control"/>
+			</div>
+
+			<div class="mb-3">
+			
+			<label>Role</label> 
+				<select class="form-control" th:field="*{role}" id="role">
+						<option value="" selected>--Please Select--</option>
+						<option value="Admin">Admin</option>
+						<option value="Guest">Guest</option>
+			</select>
+			</div>
+
+			<div class="alert alert-primary" id="userAlert" role="alert" style="display:none">
+		
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+
+			<button type="reset" id="resetUser" class="btn btn-success">Reset</button>
+			 
+
+		</form>
+
+	</div>
+
+
+	<th:block th:replace="fragments/modal :: modal('userNotice')"></th:block>
+
+</body>
+
+<script>
+	$(document).ready(function() {
+		$("#addUser").submit(function(e) {
+
+		    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+		    var userName = $('#userName').val();
+		    var fullName = $('#fullName').val();
+		    var role = $('#role').val();
+		    if(userName && fullName && role){
+		    	 $.ajax({
+				        type: "POST",
+				        url: "/users/addUsers",
+				        data: $(this).serialize(), // serializes the form's elements.
+				        success: function(data){
+				           if(data=="exist"){
+				        	   document.getElementById('userAlert').innerHTML = userName + " already exist!";
+				        	   document.getElementById('userAlert').setAttribute('style', 'display:block');
+				        	  
+				           }
+				           if(data=="sucess"){
+				        	   document.getElementById('userAlert').innerHTML = "Created user successfully! " + userName;
+				        	   document.getElementById('userAlert').setAttribute('style', 'display:block');
+				        	  
+				           }
+				        }
+				    });
+		    }else{
+		   		document.getElementById('userAlert').innerHTML = " Please input all user's information!";
+
+		    	document.getElementById('userAlert').setAttribute('style', 'display:block');
+		    
+		    }
+		   
+		    
+		});
+		
+		$("#resetUser").click(function(e){
+			 e.preventDefault();
+			 document.getElementById('userAlert').setAttribute('style', 'display:none');
+			document.getElementById('addUser').reset();
+			 
+		});
+	});
+
+</script>
+
+</html>

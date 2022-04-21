@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: html_head"></head>
+
+
+<body>
+
+	<header th:include="fragments/header :: menu"></header>
+
+	<div class="container">
+
+		<h1>View & Edit Record</h1>
+		
+			 
+	 	<!-- <form action="#" th:action="@{/puredataupdate}" th:object="${purerecord}" method="post"> -->
+			<form th:object="${purerecord}" id="publicationForm">
+			
+			
+			<div th:if="*{potentially_published}" class="potentialli-published">
+				This record has been flagged as potentially published. 
+				<a th:href="'https://doi.org/'+*{potentially_doi}" target="_blank"><p th:text="*{potentially_doi}"></p></a>
+			</div>
+			
+			
+			<div class="card border-dark">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-md-11">
+							<i class="fas fa-users"></i> Record Details
+						</div>
+						<div class="btn-group" role="group">
+							<button id="btnGroupDrop1" type="button"
+								class="btn btn-outline-dark dropdown-toggle"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								<i class="fas fa-users"></i>
+							</button>
+							<div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+								<a class="dropdown-item" id="synPure">
+									<i class="fas fa-sync"></i> Sync</a> 
+								<a class="dropdown-item" th:href="${'/publication/export?pureId=' + purerecord.pureId + '&action=perAuthor'}">
+									<i class="fas fa-file-export"></i> Export</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" id="deleteRecord"> 
+									<i class="fas fa-trash-alt"></i> Delete
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="card-body text-dark">
+
+					<div class="row">
+						<div class="col-4">
+							<strong>Pure ID:</strong>
+							<p id="pureId" th:text="*{pureId}" />
+
+							<strong>Pure Status:</strong>
+							<p th:text="*{publicationStatus} ?: '-'" />
+
+							<strong>Title:</strong>
+							<p th:text="*{title} ?: '-'" />
+
+							<strong>Journal:</strong>
+							<p th:text="*{journal} ?: '-'" />
+
+							<strong>Output Type:</strong>
+							<p th:text="*{outputType} ?: '-'" />
+
+							<strong>DOI:</strong>
+							<p>
+								<a th:href="*{doi}" target="_blank"> <span th:text="*{doi}"></span>
+								</a>
+							</p>
+
+							<strong>Pure Portal:</strong>
+							<p>
+								<a th:href="*{portalUrl}" target="_blank"> <span
+									th:text="*{portalUrl}"></span>
+								</a>
+							</p>
+
+						</div>
+						<div class="col">
+							<strong>Accepted Date:</strong>
+							<p th:text="*{#dates.format(acceptedDate, 'dd/MM/yyyy')} ?: '-'"></p>
+
+							<strong>ePub Date:</strong>
+							<p th:text="*{#dates.format(ePublicationDate, 'dd/MM/yyyy')} ?: '-'"></p>
+							
+							<strong>Published Date:</strong>
+							<p th:text="*{#dates.format(publicationDate, 'dd/MM/yyyy')} ?: '-'"></p>
+							
+							<strong>Publisher Name:</strong>
+							<p th:text="*{publisherName} ?: '-'" />
+
+							 	<strong>Pure Record Creator</strong>
+							<p th:text="*{createdBy} ?: '-'" />
+
+							<strong>Pure Record Created Date</strong>
+							<p th:text="*{#dates.format(createdDate, 'dd/MM/yyyy HH:mm')} ?: '-'"></p>
+							
+							<strong>Pure Record Last Modified Date</strong>
+							<p th:text="*{#dates.format(pure_last_modified_date, 'dd/MM/yyyy HH:mm')} ?: '-'"></p>
+							
+
+						</div>
+						<div class="col">
+						
+
+							<strong>Created By</strong>
+							<p th:text="*{oacp_createdBy} ?: '-'" />
+
+							<strong>Created Date</strong>
+							<p th:text="*{#dates.format(oacp_createdDate, 'dd/MM/yyyy HH:mm')} ?: '-'"></p>
+							
+							<strong>Last Modified By</strong>
+							<p th:text="*{oacp_modifiedBy} ?: '-'" />
+
+							<strong>Last Modified Date</strong>
+							<p th:text="*{#dates.format(oacp_modifiedDate, 'dd/MM/yyyy HH:mm')} ?: '-'"></p>
+							
+							<strong>Last Synced By</strong>
+							<p th:text="*{oacp_syncedBy} ?: '-'" />
+
+							<strong>Last Synced Date</strong>
+							<p th:text="*{#dates.format(oacp_syncedDate, 'dd/MM/yyyy HH:mm')} ?: '-'"></p>
+							
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+			<br />
+			<div class="card border-dark">
+				<div class="card-header">
+					<i class="fas fa-users"></i> Authors & Organisations
+				</div>
+				<div class="card-body text-dark">
+					<table class="table">
+						<tr th:if="*{authors}" th:each="author,custStat : *{authors}">
+							<td width="50%"><a class="collapsed" data-toggle="collapse"
+								th:href="'#demo'+${custStat.index}"
+								th:text="${author.forename} + ' ' +  ${author.surname}"></a>
+								<div th:id="'demo'+ ${custStat.index}" class="collapse">
+									<strong>First Name: </strong> <label
+										th:text="${author.forename}"></label><br> 
+										<strong>Last Name: </strong> <label th:text="${author.surname}"></label><br> 
+										<strong>SPOT ID: </strong> <label th:text="${author.spotID} ?: '-'"></label><br>
+									<strong>Email Address: </strong> <label
+										th:text="${author.emailAddress} ?: '-'"></label>
+								</div></td>
+							<td width="50%"><a data-toggle="collapse"
+								th:href="'#demo2'+${custStat.index}"
+								th:text="${author.faculty_name}"></a>
+								<div th:id="'demo2'+${custStat.index}" class="collapse">
+									<strong>School Name: </strong> <label
+										th:text="${author.school_name} ?: '-'"></label><br> <strong>Faculty
+										Name: </strong> <label th:text="${author.faculty_name} ?: '-'"></label>
+								</div></td>
+						</tr>
+
+
+					</table>
+
+				</div>
+			</div>
+
+			<hr />
+			<h3>Update Record</h3>
+			<div class="row">
+				<div class="col">
+					<label>Deposit Route</label> <select id="depositRoute" class="form-control"
+						th:field="*{deposit_route}">
+						<option value="">--Please Select--</option>
+						<option value="External"
+							th:selected="${deposit_route}=='External'">External</option>
+						<option value="Gateway - Green"
+							th:selected="${deposit_route}=='Gateway - Green'">Gateway - Green</option>
+						<option value="Gateway - Gold"
+							th:selected="${deposit_route}=='Gateway - Gold'">Gateway - Gold</option>
+						<option value="Pure" th:selected="${deposit_route}=='Pure'">Pure</option>
+						<option value="Transformative agreement"
+							th:selected="${deposit_route}=='Transformative agreement'">Transformative
+							agreement</option>
+					</select>
+				</div>
+				<div class="col">
+					<label>Gateway Depositor</label> 
+					<input type="text" id="GatewayDepositor"
+						th:field="*{gateway_depositor}" class="form-control" />
+				</div>
+
+			</div>
+
+			<br />
+			<div class="row">
+				
+				<div class="col">
+					<p>Help Raise Visibility</p>
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-outline-dark"
+							th:classappend="*{help_raise_visibility}==false ? active:''">
+							<input type="radio" name="options" value="0" autocomplete="off"
+							th:field="*{help_raise_visibility}"> No
+						</label> <label class="btn btn-outline-dark"
+							th:classappend="*{help_raise_visibility}==false ? '':active">
+							<input type="radio" name="options" value="1" autocomplete="off"
+							th:field="*{help_raise_visibility}"> Yes
+						</label>
+					</div>
+				</div>
+				<div class="col">
+					<p>REF Compliance Exception</p>
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-outline-dark"
+							th:classappend="*{ref_compliance_exception}==false ? active:''">
+							<input type="radio" name="options" value="0" autocomplete="off"
+							th:field="*{ref_compliance_exception}"> No
+						</label> <label class="btn btn-outline-dark"
+							th:classappend="*{ref_compliance_exception}==false ? '':active">
+							<input type="radio" name="options" value="1" autocomplete="off"
+							th:field="*{ref_compliance_exception}"> Yes
+						</label>
+					</div>
+				</div>
+				<div class="col">
+					<p>Data Access Statement</p>
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-outline-dark"
+							th:classappend="*{data_access_statement}==false ? active:''">
+							<input type="radio" name="options" id="option1" value="0"
+							th:field="*{data_access_statement}"> No
+						</label> <label class="btn btn-outline-dark"
+							th:classappend="*{data_access_statement}==false ? '':active">
+							<input type="radio" name="options" id="option3" value="1"
+							th:field="*{data_access_statement}"> Yes
+						</label>
+					</div>
+				</div>
+				<div class="col">
+					<p>Rights Retention Statement</p>
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-outline-dark"
+							th:classappend="*{rights_retention_statement}==false ? active:''">
+							<input type="radio" name="options" id="option1" value="0"
+							th:field="*{rights_retention_statement}"> No
+						</label> <label class="btn btn-outline-dark"
+							th:classappend="*{rights_retention_statement}==false ? '':active">
+							<input type="radio" name="options" id="option3" value="1"
+							th:field="*{rights_retention_statement}"> Yes
+						</label>
+					</div>
+				</div>
+			</div>
+
+
+			<br />
+			<div class="row">
+				<div class="col">
+					<label>Record Status</label> <select class="form-control"
+						th:field="*{record_status}">
+						<option value="">--Please Select--</option>
+						<option value="AAM deposited - awaiting publication"
+							th:selected="${record_status}=='AAM deposited - awaiting publication'">
+								 AAM deposited - awaiting publication</option>
+						<option value="AAM deposited - published"
+							th:selected="${record_status}=='AAM deposited - published'">
+							AAM deposited - published</option>
+						<option value="Information required"
+							th:selected="${record_status}=='Information required'">Information required</option>
+						 
+					</select>
+				</div>
+				<div class="col">
+					<label>REF Compliance Status</label> <select class="form-control"
+						th:field="*{compliance_status}">
+						<option value="">--Please Select--</option>
+						<option value="Green - internal"
+							th:selected="${compliance_status}=='Green - internal'">Green - internal</option>
+						<option value="Green - external"
+							th:selected="${compliance_status}=='Green - external'">Green - external</option>
+						<option value="Gold - internal"
+							th:selected="${compliance_status}=='Gold - internal'">Gold - internal</option>
+						<option value="Gold - external"
+							th:selected="${compliance_status}=='Gold - external'">Gold - external</option>
+						<option value="Not compliant"
+						     th:selected="${compliance_status}=='Not compliant'">Not compliant</option>
+						<option value="Exception applied"
+						     th:selected="${compliance_status}=='Exception applied'">Exception applied</option>
+					</select>
+				</div>
+			</div>
+			<br />
+			<div class="row">
+				<div class="col-2">
+					<p>UKRI</p> 
+					<input type="hidden" id="ukriFlag" th:value="*{ukri_S_Flag}"/>
+					<div class="btn-group btn-group-toggle show-ukriStatus" data-toggle="buttons" id="ukriButton">
+						 
+						<label class="btn btn-outline-dark"
+							th:classappend="*{ukri_S_Flag}==false ? active:''">
+							<input type="radio" value="0" autocomplete="off"
+							th:field="*{ukri_S_Flag}">No</label> 
+						<label class="btn btn-outline-dark"
+							th:classappend="*{ukri_S_Flag}==false ? '':active">
+							<input type="radio" value="1" autocomplete="off"
+							th:field="*{ukri_S_Flag}">Yes</label>
+					</div>
+				</div>
+				<div class="col">
+					<div id="Ukricompliance">
+						<label>UKRI Compliance Status</label>
+						 <select id="ukristatusSelect"
+						     class="form-control" th:field="*{ukri_compliance_status}">
+							<option value="">--Please Select--</option>
+							<option value="Green - internal"
+								th:selected="${ukri_compliance_status}=='Green - internal'">Green - internal</option>
+							<option value="Green - external"
+								th:selected="${ukri_compliance_status}=='Green - external'">Green - external</option>
+							<option value="Gold - internal"
+								th:selected="${ukri_compliance_status}=='Gold - internal'">Gold - internal</option>
+							<option value="Gold - external"
+								th:selected="${ukri_compliance_status}=='Gold - external'">Gold - external</option>
+							<option value="Not compliant"
+							     th:selected="${ukri_compliance_status}=='Not compliant'">Not compliant</option>
+							<option value="Exception applied"
+							     th:selected="${ukri_compliance_status}=='Exception applied'">Exception applied</option>
+						
+						</select>
+					</div>
+					
+				</div>
+				
+				<div class="col-6">
+					<label>Length of Embargo</label> <select class="form-control"
+						th:field="*{embargo_length}">
+						<option value="">--Please Select--</option>
+						<option value="0" th:selected="${embargo_length}=='0'">0 Month</option>
+						<option value="6" th:selected="${embargo_length}=='6'">6 Months</option>
+						<option value="12" th:selected="${embargo_length}=='12'">12 Months</option>
+						<option value="18" th:selected="${embargo_length}=='18'">18 Months</option>
+						<option value="24" th:selected="${embargo_length}=='24'">24 Months</option>
+						<option value="36" th:selected="${embargo_length}=='36'">36 Months</option>
+
+					</select>
+				</div>
+			</div>
+			 
+			<br />
+			 <div class="row">
+			 	<div class="col-6">
+			 	
+			 	<label>File URL:</label>
+					<textarea class="form-control" id="FileUrlval" rows="4" cols="50"
+						th:field="*{fileUrl}"></textarea>
+						
+				<br/>
+				
+				<label>Note</label> 
+					<textarea class="form-control" id="noteText"></textarea>
+					<p style="display: none" class="alert alert-warning" id="NoteAlert">Please input Funder!</p> 
+                    <input type="button" id="addNoteBtn" class="btn btn-light" value="Add Notes" />
+				   
+						
+			</div>
+			
+			<div class="col-6">
+                 <div class="card note_card">
+                    <div class="card-header">
+                       Notes
+                    </div>      
+                 <div class="card-body">
+                 <ul id="NoteList" class="list-group list-group-flush">
+                 	   <li th:if="*{note_list.size()==0}" id="noNote" class="list-group-item">No Notes have been added!</li>
+					   <li th:each="note:*{note_list}" class="list-group-item d-flex flex-column">
+					    <div class="p-2">
+					      <i class='fas fa-times delete_note'><input th:value="${note._id}" hidden/></i>
+					       <span th:text="${note.message}"> </span>
+					    </div>
+					    
+					     <div class="p-2 d-flex justify-content-between">
+					     	<small th:text="${note.displayName}"></small>
+					    	<small class="mb-1" th:text="${#dates.format(note.created_date, 'dd/MM/yyyy HH:MM')} ?: '-'"></small>
+					     </div>
+					    
+					  </li>  
+					                    	                        	
+				</ul>  
+
+                 </div>
+              </div> 
+          </div> 
+			 
+			 </div>
+			<br />
+			<div class="row">
+				<div class="col-6">
+				
+				
+				</div>
+				
+			</div>
+
+			<br />
+			<div class="row">
+				<div class="col">
+					  <button type='button' class="btn btn-light btn-lg btn-block" onclick='javascript:window.history.back()'>Cancel</button>
+				</div>
+
+				<div class="col">
+					<button type="button" class="btn btn-primary btn-lg btn-block"
+					  id="Scholarcy">Get Scholarcy Data</button>
+				</div>
+
+				<div class="col">
+					<button type="button" id="savePublication"
+					class="btn btn-primary btn-lg btn-block">Save</button>
+				</div>
+				
+				</div>
+
+		</form>
+		
+		<div id="loader" class="submit-progress">
+			 <i class="fa fa-2x fa-spinner fa-spin"></i>
+		   <label id="spinMes"> </label>
+		</div>
+		
+		<th:block th:replace="fragments/modal :: modal('Scholarcy_result')"></th:block>
+		<th:block th:replace="fragments/modal :: toast"></th:block>
+		<th:block th:replace="fragments/modal :: modal('delete_Record')"></th:block>
+			
+		<div th:if="${message}" id="PublicationToast">
+		<input type="hidden" th:value="${message}" id="message"/>
+		  <th:block th:replace="fragments/modal :: toast"></th:block>
+		</div>
+
+	</div>
+	<footer class="footer" th:include="fragments/footer :: footer"></footer>
+
+
+</body>
+
+<script>
+	$(document).ready(function() {
+		
+	$("#savePublication").click(function(){
+		  $.ajax({
+		        url: '/publication/update',
+		        type: 'post',
+		        data: $('#publicationForm').serialize()
+		    }).done(function(response){
+		    	$('.toast').toast('show');
+				 $('.toast-title').text("Notification!"); 
+		    	
+		    	 if(response.indexOf("PotentiallyFalse")>-1){
+		    		 document.getElementsByClassName('potentialli-published')[0].setAttribute('style', 'display:none');
+				  }
+		    	 
+		    	 if(response.indexOf("update")>-1){
+					$('.toast-body').text("This Record was updated successfully!");
+				  }
+		    	 
+				  if(response.indexOf("updatenodata")>-1){
+					  $('.toast-body').text("No update information was inputed!");
+				  } 
+		    	});
+	});
+		
+		
+		var ukriFlag = $("#ukriFlag").val();
+		if(ukriFlag=='false'){
+			  $("#ukristatusSelect").prop('disabled', 'disabled');
+		}
+		
+		//getting note from note controller
+		var pureId= $("#pureId").text();
+		
+		var spinner = $('#loader');
+
+		$('#Scholarcy').click(function(e) {
+			var name = $("#FileUrlval").val();
+			if(name != ""){
+				spinner.css({ display: 'block'});
+				$.ajax({
+					url : '/scholarcydata?name=' + name,
+					method : 'post'
+				}).done(
+						function(data) {
+							spinner.css({ display: 'none'});
+							$('#Scholarcy_result').modal({
+					    		  show: true
+				    		});
+							
+							$('#Scholarcy_result').find('#information').remove();
+							$('#Scholarcy_result').find(
+									'.modal-body').html(
+									data);
+						});
+			}else{
+				$('.toast').toast('show');
+				$('.toast-title').text("File URL is empty!");
+				$('.toast-body').text("Please input File URL");
+			}
+			
+
+					
+		});
+		
+		$("#synPure").click(function(){
+			spinner.find("#spinMes").text("Sync Record: " + pureId);
+			spinner.css({ display: 'block'});
+			$.ajax({
+		        type: "GET",
+		        url:  "/publication/sync/"+pureId,
+		        success: function(data){
+		        	spinner.css({ display: 'none'});
+		        	 $('.toast').toast('show');
+					  $('.toast-title').text("Notification!");
+					  if(data == 'sync'){
+						  window.location.reload();
+						  $('.toast-body').text("Sync Record successfully!");
+					  }
+					  if(data == 'syncnopureID'){
+						  $('.toast-body').text("This PureId is not found from Pure APIS!");
+					  }
+					  if(data == 'syncuptodate'){
+						  $('.toast-body').text("This PureId is up to Date!");
+					  } 
+		        }
+			});
+			  
+		});
+		
+		//If Pure, external or transformative agreemnt is chosen,
+		//grey out Gateway Depositor field
+		
+		var depositvalue = $( "#depositRoute option:selected" ).val();
+		if(depositvalue=='Pure' || depositvalue=='External' || depositvalue =='Transformative agreemnt'){
+			$("#GatewayDepositor").prop('disabled', true);
+		}
+		
+		$("#depositRoute").change(function() {
+			depositvalue = $( "#depositRoute option:selected" ).val();
+			if(depositvalue=='Pure' || depositvalue=='External' || depositvalue =='Transformative agreement'){
+				$("#GatewayDepositor").prop('disabled', true);
+			}else{
+				$("#GatewayDepositor").prop('disabled', false);
+			}
+		});
+		
+		$('.show-ukriStatus .btn').on("click",function(){
+			   
+			   var ukristatus = $(this).find('input[type=radio]').val();
+			   if(ukristatus == '1'){
+				   $("#ukristatusSelect").removeAttr("disabled");
+			   }
+			   if(ukristatus == '0'){
+				   $("#ukristatusSelect").prop('disabled', 'disabled');
+			   }
+		})
+		
+			
+		/* add new note */
+		$("#addNoteBtn").click(function(event) {
+					event.preventDefault();
+					var noteText = $("#noteText").val();
+					if (noteText != "") {
+						$("#NoteAlert").css({
+							"display" : "none"
+						});
+						
+						
+						if ($("#noNote").length > 0) {
+							$("#noNote").remove();
+						}
+						
+						$("#NoteList").append(
+								"<li class='list-group-item'><i class='fas fa-times delete_icon'></i>  "
+										+"<input style='border: none;' name='notelist' value='"+noteText+"'></input></li>");
+						
+						$("#noteText").val("");
+					} else {
+						$("#NoteAlert").css({
+							"display" : "block"
+						});
+					}
+				});
+		
+		/* delete previous notes from db */
+		$("#NoteList").on("click","i.delete_note",function(e) {
+			var noteid = $(this).find("input").val();
+			$.ajax({
+				url: "/publication/deletenote/"+noteid,
+				type: "POST"
+			}).done( function(response){
+				$('.toast').toast('show');
+				$('.toast-title').text("Delete Notes!");
+				$('.toast-body').text(response);
+			});
+			$(this).closest('li').remove();
+			
+		});
+		/* end of add note */
+		
+		
+		  if($('#PublicationToast').length){
+			  
+			  var message = $('#message').val();
+			 
+			  if(message == 'delete'){
+				  $('.toast').toast('hide');
+			  }else{
+				  $('.toast').toast('show');
+				  $('.toast-title').text("Notification!");
+				  if(message == 'create'){
+					  $('.toast-body').text("Create new Record successfully!");
+				  }
+				  if(message == 'sync'){
+					  $('.toast-body').text("Sync Record successfully!");
+				  }
+				  if(message == 'syncnopureID'){
+					  $('.toast-body').text("This PureId is not found from Pure APIS!");
+				  }
+				  if(message == 'syncuptodate'){
+					  $('.toast-body').text("This PureId is up to Date!");
+				  } 
+			  }
+			  
+		    }
+	
+		$("#deleteRecord").click(function(){
+			$('#delete_Record').modal({
+	    		  show: true
+	    		});
+			$('#delete_Record').find('#information').remove();
+			$('.modal-title').text("Notification");
+			$('#delete_Record').find('.modal-body').text("Are you sure you want to delete pureId: " + pureId);
+			
+			$('#delete_Record').find('#confirm').css({
+				"display" : "block"
+			});
+			
+			/* $('#delete_Record').find('#confirm').prop("href", "/publication/delete/"+ pureId); */
+			
+			$('#delete_Record').find('#confirm').click(function(){
+				$.ajax({
+			        type: "GET",
+			        url:  "/publication/delete/"+ pureId,
+			        success: function(data){
+			        	$('#delete_Record').modal("hide");
+			           if(data=="delete"){
+			        	   
+			        	 $('#Notice').modal('hide')
+							window.location.href = "/publications/all";   
+			           }
+			        }
+			    });
+			});
+			
+		});
+		
+
+	});
+</script>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: html_head">
+</head>
+
+<body>
+	<header th:include="fragments/header :: menu"> </header>
+	<div class="container">
+		<h2>Search Publications</h2>
+	<form th:action="@{/publication/export}" th:object="${purerecord}" method="GET" class="border">
+			<table id="publicationSearch">
+					<tr>
+						<td class="pureid">
+						<label>Pure ID</label> 
+								<input type="text" class="column_filter form-control"
+							id="col0_filter" th:name="pureId" th:value="${pureId}" placeholder="Pure ID">
+						</td>
+						<td class="doi">
+							<label>DOI</label>
+							<input type="text" class="column_filter form-control" th:name="doi"
+							id="col10_filter" placeholder="Doi">
+						</td>
+						
+						<td>
+						<label>Compliance Status</label> 
+						<select class="column_filter form-control"
+							id="col4_filter" th:name="compliance_status">
+								<option value="">--Please Select--</option>
+								<option value="Green - internal">Green - internal</option>
+								<option value="Green - external">Green - external</option>
+								<option value="Gold - internal">Gold - internal</option>
+								<option value="Gold - external">Gold - external</option>
+								<option value="Not compliant">Not compliant</option>
+								<option value="Exception applied">Exception applied</option>
+						</select></td>
+						
+						<td>
+							<label>Help Raise Visibility</label>
+							<select class="column_filter form-control"
+								id="col6_filter" th:name="help_raise_visibility">
+								<option value="">--Please Select--</option>
+								<option value="false">  No  </option>
+								<option value="true"> Yes </option>
+							</select>
+						
+						</td>
+					</tr>
+					
+					<tr>
+						
+						<td><label>Pure
+								Status</label> <select class="column_filter form-control"
+							id="col1_filter" th:name="publicationStatus">
+								<option value="">--Please Select--</option>
+								<option value="Accepted/In press">Accepted/In press</option>
+								<option value="E-pub ahead of print">E-pub ahead of print</option>
+								<option value="Published">Published</option>
+								<option value="Submitted">Submitted</option>
+						</select>
+						</td>
+						
+						<td>
+						<label>Record Status</label> <select class="column_filter form-control"
+							id="col3_filter" th:name="record_status">
+								<option value="">--Please Select--</option>
+								<option value="AAM deposited - awaiting publication">AAM deposited - awaiting publication</option>
+								<option value="AAM deposited - published">AAM deposited - published</option>
+								<option value="Information required">Information required</option>
+						</select></td>
+						
+						
+						<td id="filter_col5" data-column="5"><label>UKRI Compliance
+								Status</label> <select class="column_filter form-control"
+							id="col5_filter" th:name="UKRI_compliance_status">
+								<option value="">--Please Select--</option>
+								<option value="Green - internal">Green - internal</option>
+								<option value="Green - external">Green - external</option>
+								<option value="Gold - internal">Gold - internal</option>
+								<option value="Gold - external">Gold - external</option>
+								<option value="Not compliant">Not compliant</option>
+								<option value="Exception applied">Exception applied</option>
+						</select></td>
+						<td id="filter_col12" data-column="12">
+							<label>UKRI/Plan S flag</label>
+							<select class="column_filter form-control"
+								id="col8_filter" th:name="UKRI_S_Flag">
+								<option value="">--Please Select--</option>
+								<option value="false">  No </option>
+								<option value="true">  Yes </option>
+							</select>
+						</td>
+						
+					</tr>
+					<tr>
+						<td id="filter_col13" data-column="13" colspan="2"><label>Organisations</label>
+
+							<select class="column_filter form-control" id="col13_filter"
+							th:name="organization">
+								<option value="">--Please Select--</option>
+								<optgroup value="2" label="Level 2">
+									<option value="I2018">Faculty of Biology, Medicine and
+										Health</option>
+									<option value="I2001">Faculty of Humanities</option>
+									<option value="I2000">Faculty of Science and
+										Engineering</option>
+								</optgroup>
+								<optgroup value="3" label="Level 3">
+									<option value="I3016">Alliance Manchester Business
+										School</option>
+									<option value="I3056">Cancer Research UK Manchester
+										Institute</option>
+									<option value="I3088">School of Arts, Languages and
+										Cultures</option>
+									<option value="I3114">School of Biological Sciences</option>
+									<option value="I3022">School of Chemistry</option>
+									<option value="I3023">School of Computer Science</option>
+									<option value="I3025">School of Earth and
+										Environmental Sciences</option>
+									<option value="I3028">School of Environment, Education
+										and Development</option>
+									<option value="I3116">School of Health Sciences</option>
+									<option value="I3031">School of Law</option>
+									<option value="I3033">School of Materials</option>
+									<option value="I3034">School of Mathematics</option>
+									<option value="I3115">School of Medical Sciences</option>
+									<option value="I3041">School of Social Sciences</option>
+								</optgroup>
+						</select>
+					  </td>
+					  
+						<td id="filter_col9" data-column="9">
+							<label>Potentially Published</label>
+							<select class="column_filter form-control"
+								id="col7_filter" th:name="potentially_published">
+								<option value="">--Please Select--</option>
+								<option value="false"> No </option>
+								<option value="true"> Yes </option>
+							</select>
+						
+						</td>
+						
+					</tr>
+					<tr>
+						<td colspan="2">
+							<button type="submit" name="action" class="btn btn btn-primary" value="perPureId">
+								<i class="fas fa-file-export"></i> Export Excel According PureId
+							</button>
+						</td>
+						<td>
+							 <button type="submit"  name="action" value="perAuthor" class="btn btn btn-primary btnExport">
+								<i class="fas fa-file-export"></i> Export Excel According Author
+							</button>
+						</td>
+						<td style="text-align: right;">
+							<button type="button" class="btn btn-primary btnReset">Reset</button>
+						</td>
+					</tr>
+			</table>
+
+		</form>
+		
+	</div>
+	<div class="listpublication">
+		<table class="display" id="publicationTable">
+			<thead>
+				<tr>
+					<th>Pure Id</th>
+					<th>Pure Status</th>
+					<th>Title</th>
+					<th>Record Status</th>
+					<th>Compliance Status</th>
+					<th>UKRI Compliance Status</th>
+					<th>Accepted Date</th>
+					<th>E-Publication Date</th>
+					<th>Published Date</th>
+					<th>Potentially Published</th>
+
+					<th id="14"></th>
+					<th id="15"></th>
+
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+
+		</table>
+	</div>
+	
+		
+
+	<th:block th:replace="fragments/modal :: toast"></th:block>
+		
+	<th:block th:replace="fragments/modal :: modal('Notice')"></th:block>
+	<div id="loader" class="submit-progress">
+		<i class="fa fa-2x fa-spinner fa-spin"></i>
+		<label id="spinMes"> </label>
+	</div>
+	
+	<div th:if="${message}" id="PublicationToast">
+		<input type="hidden" th:value="${message}" id="message"/>
+	</div>
+	
+		
+	<footer class="footer" th:include="fragments/footer :: footer"></footer>
+
+</body>
+<script>
+	$(document).ready(function() {
+		var spinner = $('#loader');
+		
+		$("form").keypress(function(e) {
+			  //Enter key
+			  if (e.which == 13) {
+			    return false;
+			  }
+			});
+		
+		var table = $("#publicationTable").DataTable({
+			dom: '<"top"Blip>rt<"bottom"lp><"clear">',
+			processing: true,
+			serverSide: true,
+			ajax: {
+					url : "/publication/list",
+					 data: function ( d ) {
+		                    d.pureId = $('#col0_filter').val();
+		                    d.publicationStatus = $('#col1_filter').val();
+		                    d.record_status=$('#col3_filter').val();
+							d.compliance_status=$('#col4_filter').val();
+							d.UKRI_compliance_status=$('#col5_filter').val();
+							d.doi=$('#col10_filter').val();
+							d.organization=$('#col13_filter').val();
+							d.organizaitonlevel=$('#col13_filter option:checked').closest('optgroup').attr('value');
+							
+							d.help_raise_visibility= $('#col6_filter').val();
+							d.potentially_published= $('#col7_filter').val();
+							d.UKRI_S_Flag= $('#col8_filter').val();
+		                }
+				},
+				columns : [{
+					"data" : "pureId",
+						fnCreatedCell : function(nTd, sData,oData, iRow,iCol) {
+							$(nTd).html("<a href='/publications/"+oData.pureId+"'>"
+									+ oData.pureId+ "</a>");			
+						}
+					},
+					{"data" : "publicationStatus"},
+					{"data" : "title"},
+					{"data" : "record_status"},
+					{"data" : "compliance_status"},
+					{"data" : "ukri_compliance_status"},
+					{"data" : "acceptedDate"},
+					{"data" : "ePublicationDate"},
+					{"data" : "publicationDate"},
+					{"data" : "potentially_published"},
+					
+					{data : null,
+						defaultContent: "<i class='fas fa-sync' title='sync'/>",
+						orderable : false
+					},
+					{data : null,
+						defaultContent: '<i class="fas fa-trash-alt" title="delete"/>',
+						orderable : false
+					} ],
+					order : [ 0, "desc" ]
+		});
+		
+	$('#publicationTable tbody').on('click','.fa-sync',function() {
+		var data = table.row($(this).parents('tr')).data();
+		spinner.find("#spinMes").text("Sync Record: " + data.pureId);
+		spinner.css({ display: 'block'});
+		$.ajax({
+	        type: "GET",
+	        url:  "/publication/sync/"+data.pureId,
+	        success: function(data){
+	        	console.log("data: "+ data);
+	        	spinner.css({ display: 'none'});
+	        	 $('.toast').toast('show');
+				  $('.toast-title').text("Notification!");
+				  if(data == 'sync'){
+					  table.ajax.reload();
+					  $('.toast-body').text("Sync Record successfully!");
+				  }
+				  if(data == 'syncnopureID'){
+					  $('.toast-body').text("This PureId is not found from Pure APIS!");
+				  }
+				  if(data == 'syncuptodate'){
+					  $('.toast-body').text("This PureId is up to Date!");
+				  } 
+	        }
+		});
+			
+		});
+		
+	$('#publicationTable tbody').on('click','.fa-trash-alt',function() {
+		
+		var data = table.row($(this).parents('tr')).data();
+		$('#Notice').modal({
+			show : true
+		})
+		$('#Notice').find('#information').remove();
+		$('#Notice').find('.modal-title').text("Notification");
+		
+		$('#Notice').find('.modal-body').text("Are you sure you want to delete pureId: " + data.pureId);
+		
+		$('#Notice').find('#confirm').css({
+			"display" : "block"
+		});
+		
+		$('#Notice').find('#confirm').click(function(){
+			$.ajax({
+		        type: "GET",
+		        url:  "/publication/delete/"+data.pureId,
+		        success: function(data){
+		        	
+		           if(data=="delete"){
+		        	   table.ajax.reload();
+		        	   $('#Notice').modal('hide')
+		        	   $('.toast').toast('show');
+						  
+						$('.toast-title').text("Notification!");
+						$('.toast-body').text("Delete Records successfully!");
+		        	   
+		           }
+		        }
+		    });
+		});
+		
+	});
+	
+	
+	
+	$(".column_filter").bind("change keyup",function(event) {
+		table.ajax.reload();
+		
+		var searchFileds = {"pureId":$('#col0_filter').val(),
+				"publicationStatus":$('#col1_filter').val(),
+				"recordstatus":$('#col3_filter').val(),
+				"compliancestatus":$('#col4_filter').val(),
+				"UKRIcompliancestatus":$('#col5_filter').val(),
+				"doi":$('#col10_filter').val(),
+				"organization":$('#col13_filter').val(),
+				"helpraisevisibility":$('#col6_filter').val(),
+				"potentiallypublished":$('#col7_filter').val(),
+				"UKRISFlag":$('#col8_filter').val()};
+		localStorage.setItem("searchFileds", JSON.stringify(searchFileds));
+		
+	});
+	
+	
+
+	if(localStorage.getItem("searchFileds")){
+		var searchFiledsJson = JSON.parse(localStorage.getItem("searchFileds"));
+		$('#col0_filter').val(searchFiledsJson['pureId']);
+		$('#col1_filter').val(searchFiledsJson['publicationStatus']);
+		$('#col4_filter').val(searchFiledsJson['compliancestatus']);
+		$('#col3_filter').val(searchFiledsJson['recordstatus']);
+		$('#col5_filter').val(searchFiledsJson['UKRIcompliancestatus']);
+		$('#col10_filter').val(searchFiledsJson['doi']);
+		$('#col13_filter').val(searchFiledsJson['organization']);
+		$('#col6_filter').val(searchFiledsJson['helpraisevisibility']);
+		$('#col7_filter').val(searchFiledsJson['potentiallypublished']);
+		$('#col8_filter').val(searchFiledsJson['UKRISFlag']);
+		table.ajax.reload();
+	}
+
+
+	$(".btnReset").bind("click", function(event) {
+		 
+		$('#col0_filter').val("");
+        $('#col1_filter').val("");
+        $('#col3_filter').val("");
+		$('#col4_filter').val("");
+		$('#col5_filter').val("");
+		$('#col10_filter').val("");
+		$('#col13_filter').val("");
+		$('#col6_filter').val("");
+		$('#col7_filter').val("");
+		$('#col8_filter').val("");
+		localStorage.removeItem("searchFileds");
+		table.ajax.reload();
+		
+	}); 
+	
+	 
+	$('.btn-group label').click(
+		function(e) {
+			e.preventDefault();
+
+			var radio = $(this).find(
+					'input[type=radio]');
+
+			if (radio.is(':checked')) {
+				e.stopImmediatePropagation();
+				$(this).removeClass("active");
+				radio.prop('checked', false);
+				var id = $(this).parents('td').attr(
+						'data-column');
+				table.column(id).search("").draw();
+			} else {
+				radio.prop('checked', true);
+			}
+		});
+	
+	
+	  if($('#PublicationToast').length){
+	    	 
+			  var message = $('#message').val();
+			 
+			  if(message == 'delete'){
+				  $('.toast').toast('show');
+				  $('.toast-title').text("Notification!");
+				  $('.toast-body').text("Delete Record successfully!");
+			  }
+			    	
+	    }
+
+	});
+</script>
+
+</html>

@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: html_head">
+</head>
+<body>
+	<div class="container">
+		<h2>Edit User</h2>
+
+		<form id="editUser" th:object="${userRecord}">
+
+			<div class="mb-3">
+				<input type="hidden" th:name="userId" class="form-control"
+					id="userId" th:value="${users.userId}" />
+			</div>
+
+			<div class="mb-3" >
+				<label class="form-label">User Name</label> <input type="text"
+					th:name="userName" class="form-control" id="updateuserName"
+					th:value="${users.userName}"/>
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label">Name</label> <input type="text"
+					th:name="fullName" class="form-control" id="updatefullName"
+					th:value="${users.fullName}"/>
+			</div>
+			<div class="mb-3">
+
+				<label class="form-label">Role</label> <select class="form-control"
+					th:name="role" id="updaterole" th:field="${users.role}"
+					onkeyup="successRole()">
+					<option value="" selected>--Please Select--</option>
+					<option value="Admin" th:selected="${users.role}=='Admin'">Admin</option>
+					<option value="Guest" th:selected="${users.role}=='Guest'">Guest</option>
+				</select>
+
+			</div>
+				<div class="alert" id="updateAlert" role="alert" style="display:none"></div>
+			<div class="mb-3">
+				<button type="submit" id="submitUser" class="btn btn-primary">Submit</button>
+				
+			</div>
+			
+			
+		</form>
+			
+	</div>
+</body>
+<script>
+$(document).ready(function(){
+	$("#editUser").submit(function(e) {
+	    e.preventDefault(); // avoid to execute the actual submit of the form.
+	});
+});
+</script>
+</html>

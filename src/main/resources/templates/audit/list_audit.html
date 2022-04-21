@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: html_head">
+
+</head>
+
+<body>
+	<header th:include="fragments/header :: menu"> </header>
+	<div class="container">
+		<h1>Audit Logs</h1>
+
+		<form class="border">
+			<table id="publicationSearch">
+				<tbody>
+					<tr>
+						<td id="filter_col0"><label>Search</label> <input
+							type="text" class="column_filter form-control" id="col1_filter"
+							placeholder="Search for message text"></td>
+						<td id="filter_col2"><label>Level</label> <select
+							class="column_filter form-control" id="col2_filter">
+								<option value="" selected>--Please Select--</option>
+								<option value="ERROR">ERROR</option>
+								<option value="INFO">INFO</option>
+								<option value="LOG">LOG</option>
+						</select></td>
+					</tr>
+
+					<tr>
+						<td colspan="2"><label>Type</label>
+							<select class="column_filter form-control" id="col3_filter">
+								<option value="" selected>--Please Select--</option>
+								<optgroup label="CROSSREF_SYNCER">
+									<option value="CROSSREF_SYNC_STARTED">CROSSREF_SYNC_STARTED</option>
+									<option value="CROSSREF_SYNC_MARKED_AS_POTENTIALLY_PUBLISHED">CROSSREF_SYNC_MARKED_AS_POTENTIALLY_PUBLISHED</option>
+									<option value="CROSSREF_SYNC_NOT_FOUND">CROSSREF_SYNC_NOT_FOUND</option>
+									<option value="CROSSREF_SYNC_COMPLETE">CROSSREF_SYNC_COMPLETE</option>
+								</optgroup>
+									<optgroup label="PURE_SYNCER">
+									<option value="PUBLICATION_PURE_SYNC_STARTED">PUBLICATION_PURE_SYNC_STARTED</option>
+									<option value="PUBLICATION_PURE_SYNC_RECORD_UPDATE">PUBLICATION_PURE_SYNC_RECORD_UPDATE</option>
+									<option value="PUBLICATION_PURE_SYNC_RECORD_UPDATE_FAILED">PUBLICATION_PURE_SYNC_RECORD_UPDATE_FAILED</option>
+									<option value="PUBLICATION_PURE_SYNC_COMPLETE">PUBLICATION_PURE_SYNC_COMPLETE</option>
+									
+								</optgroup>
+								<optgroup label="OACP_UPDATE">
+									<option value="PUBLICATION_RECORD_UPDATE">PUBLICATION_RECORD_UPDATE</option>
+									<option value="PUBLICATION_RECORD_CREATE">PUBLICATION_RECORD_CREATE</option>
+									<option value="PUBLICATION_RECORD_DELETE">PUBLICATION_RECORD_DELETE</option>
+									<option value="PUBLICATION_PURE_DATA_MIGRATE">PUBLICATION_PURE_DATA_MIGRATE</option>
+								</optgroup>
+						</select></td>
+
+					</tr>
+					<tr>
+						<td colspan="2" style="text-align: right;">
+							<button type="button" class="btn btn-primary btnReset">Reset</button>
+						</td>
+					</tr>
+
+				</tbody>
+
+			</table>
+
+		</form>
+		<br>
+		<table class="table" id="auditTable">
+			<thead>
+				<tr>
+					<th scope="col">Level</th>
+					<th scope="col">Message</th>
+					<th scope="col">Created By</th>
+					<th scope="col">Created Date</th>
+				</tr>
+			</thead>
+
+		</table>
+
+		<div th:replace="fragments/modal :: modal('auditDeatail')"></div>
+	</div>
+	
+	<footer class="footer" th:include="fragments/footer :: footer"></footer>
+</body>
+<script>
+	$(document).ready(function() {
+		var table = $("#auditTable").DataTable({
+			dom : 'liptip',
+			processing: true,
+			serverSide: true,
+			ajax: {
+					url : "/audit/list",
+					 data: function ( d ) {
+		                    d.message = $('#col1_filter').val();
+		                    d.level = $('#col2_filter').val();
+		                    d.type = $('#col3_filter').val();
+					 }
+			},
+			order : [ 3, "desc" ],
+			columns : [
+				{"data" : "level"},
+				{"data" : "message"},
+				{"data" : "created_by"},
+				{"data" : "created_date",
+					"render" : function(data) {
+						return moment(data).format('DD/MM/YYYY HH:mm');}}]
+		});
+						
+		$(".column_filter").bind("change keyup click",
+				function(event) {
+			
+			table.ajax.reload();
+			
+		});
+		
+		$(".btnReset").bind("click", function(event) {
+
+	        $('#col1_filter').val("");
+	        $('#col3_filter').val("");
+			$('#col2_filter').val("");
+			
+			table.ajax.reload();
+		 
+		});
+				
+		$('#auditTable tbody').on('click','tr',function() {
+			var data = table.row(this).data();
+			$('#auditDeatail').modal({
+				show : true
+			})
+			$('.modal-title').text(data.message);
+			if (data.updateDetail.includes("{")) {
+				$('#auditDeatail')
+						.find('#information')
+						.html(
+								library.json
+										.prettyPrint(JSON
+												.parse(data.updateDetail)));
+
+			} else {
+				$('#auditDeatail').find(
+						'#information').html(
+								data.updateDetail);
+			}
+		});
+						
+
+		if (!library)
+			var library = {};
+		
+		library.json = {
+				replacer : function(match, pIndent, pKey, pVal,
+						pEnd) {
+					var key = '<span class=json-key>';
+					var val = '<span class=json-value>';
+					var str = '<span class=json-string>';
+					var r = pIndent || '';
+					if (pKey)
+						r = r + key + pKey.replace(/[": ]/g, '')
+								+ '</span>: ';
+					if (pVal)
+						r = r + (pVal[0] == '"' ? str : val) + pVal
+								+ '</span>';
+					return r + (pEnd || '');
+				},
+				prettyPrint : function(obj) {
+					var jsonLine = /^( *)("[\w]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
+					return JSON.stringify(obj, null, 3).replace(
+							/&/g, '&amp;')
+							.replace(/\\"/g, '&quot;').replace(
+									/</g, '&lt;').replace(/>/g,
+									'&gt;').replace(jsonLine,
+									library.json.replacer);
+				}
+			};
+						
+
+});
+</script>
+</html>
