@@ -8,8 +8,6 @@
 	<div class="container">
 		<h2>Edit User</h2>
 
-		<form id="editUser" th:object="${userRecord}">
-
 			<div class="mb-3">
 				<input type="hidden" th:name="userId" class="form-control"
 					id="userId" th:value="${users.userId}" />
@@ -39,20 +37,11 @@
 			</div>
 				<div class="alert" id="updateAlert" role="alert" style="display:none"></div>
 			<div class="mb-3">
-				<button type="submit" id="submitUser" class="btn btn-primary">Submit</button>
+				<button type="button" id="submitUser" class="btn btn-primary">Submit</button>
 				
 			</div>
 			
-			
-		</form>
-			
 	</div>
 </body>
-<script>
-$(document).ready(function(){
-	$("#editUser").submit(function(e) {
-	    e.preventDefault(); // avoid to execute the actual submit of the form.
-	});
-});
-</script>
+
 </html>

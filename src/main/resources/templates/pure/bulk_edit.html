@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: html_head">
+</head>
+
+<body>
+	<header th:include="fragments/header :: menu"> </header>
+	<!-- Begin page content -->
+	<br/>
+	<div class="container">
+	 <div class="row">
+	  <div class="col-4 border">
+	   <h3>Search Fields</h3>
+      	  <div class="row">
+      	  	<label>Pure ID:</label> 
+			<textarea class="form-control"
+				id="pureIds" placeholder="Enter Pure Ids divided by comma"></textarea>
+      	  </div>
+      	  <div class="row">
+      	  	<label>DOI:</label>
+			<textarea class="form-control" 
+				id="Dois" placeholder="Enter Dois divided by comma"></textarea>
+      	  </div>
+      	  <br/>
+      	  <div class="row">
+      	  	<button type="button" id="bulkEditSearch" class="btn btn-primary">Search</button>
+			<button type="button" id="bulkSearchReset" class="btn btn-primary">Reset</button>
+      	  </div>
+      </div>
+      <div class="col-1"></div>
+      <div class="col-7 border">
+     		<h3>Bulk Edit Fields</h3>
+     		 <div class="row">
+			    <div class="col">
+			        <label>Record Status:</label> 
+			        <select class="form-control" id="recordStatus">
+						<option value="">--Please Select--</option>
+						<option value="AAM deposited - awaiting publication">AAM deposited - awaiting publication</option>
+						<option value="AAM deposited - published">AAM deposited - published</option>
+						<option value="Information required">Information required</option>
+					</select>
+					 
+			    </div>
+			   <div class="col">
+			      <button type="button" id="bulkEditSumit" class="btn btn-primary" disabled>Submit change</button>
+			    </div>
+			   </div>
+			   
+			   <div class="row">
+			   	<div class="col">
+			        <label>REF Compliance Status:</label> 
+			        <select class="form-control" id="complianceStatus">
+						<option value="">--Please Select--</option>
+						<option value="Green - internal">Green - internal</option>
+						<option value="Green - external">Green - external</option>
+						<option value="Gold - internal">Gold - internal</option>
+						<option value="Gold - external">Gold - external</option>
+						<option value="Not compliant">Not compliant</option>
+						<option value="Exception applied">Exception applied</option>
+					</select>
+			    </div>
+			     <div class="col">
+			      <button type="button" id="bulkEditSumit" class="btn btn-primary" disabled>Submit change</button>
+			    </div>
+			   </div>
+			   
+			   <div class="row">
+			     <div class="col-2">
+					<label>UKRI</label>
+					<div class="btn-group btn-group-toggle show-ukriStatus" data-toggle="buttons">
+						<label class="btn btn-outline-dark active"> 
+						<input type="radio" name="ukriFlag" value="false" checked>No</label> 
+						<label class="btn btn-outline-dark"> 
+						<input type="radio" name="ukriFlag" value="true"> Yes
+						</label>
+					</div>
+				</div>
+			    <div class="col">
+			       <label>UKRI Compliance Status</label> 
+						<select id="ukricompliance" class="form-control" disabled>
+							<option value="" selected>--Please Select--</option>
+							<option value="Green - internal">Green - internal</option>
+							<option value="Green - external">Green - external</option>
+							<option value="Gold - internal">Gold - internal</option>
+							<option value="Gold - external">Gold - external</option>
+							<option value="Not compliant">Not compliant</option>
+							<option value="Exception applied">Exception applied</option>
+						</select>
+			    </div>
+			    
+			     <div class="col">
+			      <button type="button" id="bulkEditSumit" class="btn btn-primary" disabled>Submit change</button>
+			    </div>
+			  
+			  </div>
+			  <br/>
+     		<div class="row">
+			    
+			  </div>
+      </div>
+	 </div>
+	 	
+		<table class="display" id="publicationTable">
+			<thead>
+				<tr>
+					<th>Pure Id</th>
+					<th>Record Status</th>
+					<th>Compliance Status</th>
+					<th>UKRI Compliance Status</th>
+				</tr>
+			</thead>
+
+		</table>
+ 
+	</div>
+	
+	<footer class="footer" th:include="fragments/footer :: footer"></footer>
+
+</body>
+
+<script>
+	$(document).ready(function(){
+		var table = $("#publicationTable").DataTable({
+			dom : 'i',
+			processing: true,
+	        serverSide: true,
+	        ajax: {
+	        	type: "GET",
+	        	url:"/bulkEdit/filter",
+	        	data:  function ( d ) {
+	        		d.pureIds=$('#pureIds').val();
+	        	}
+	         
+	        },
+	        columns : [
+				{ "data" : "pureId",
+				  fnCreatedCell : function(nTd, sData,oData, iRow,iCol) {
+						$(nTd).html("<a href='/publications/"+oData.pureId+"'>"
+								+ oData.pureId+ "</a>");			
+					}},
+					{"data" : "record_status"},
+					{"data" : "compliance_status"},
+					{"data" : "ukri_compliance_status"}
+				]
+		});
+		
+		
+		
+		$("#bulkEditSearch").bind("click", function(event){
+			table.draw();
+			console.log("length: "+ table.rows().data().length);
+			$("#bulkEditSumit").prop('disabled', false);
+			
+		});
+		
+		$("#bulkEditSumit").bind("click",function(event){
+			var recordStatus = $("#recordStatus").val();
+			var complicanceStatus = $("#complianceStatus").val();
+			var ukriComStatuts = $("#ukricompliance").val();
+			var ukriFlag = $("input[name='ukriFlag']:checked").val();
+			var pureIds="";
+			table.rows().data().map((row) => {
+				pureIds += row.pureId + ","; 
+			});
+			
+			if(recordStatus){
+				 $.ajax({
+					 	type: "POST",
+				        url: "/bulkEdit/update",
+				        data:{
+				        	BulkpureIds:pureIds,
+			        		recordStatus:recordStatus,
+			        		complicanceStatus:complicanceStatus,
+			        		ukriComStatuts:ukriComStatuts,
+			        		ukriFlag:ukriFlag
+			        	}, 
+				        success: function(data){
+				        	table.ajax.reload();
+				        }
+				    });
+				
+			}
+			
+		});
+		
+		$('.show-ukriStatus .btn').on("click",function(){
+			   
+			   var ukristatus = $(this).find('input[type=radio]').val();
+			  
+			   if(ukristatus == 'true'){
+				   $('#ukricompliance').prop('disabled', false);
+			   }
+			   
+			   if(ukristatus == 'false'){
+				   $('#ukricompliance').prop('disabled', true);
+			   }
+			   
+			   
+		});
+		
+		$("#bulkSearchReset").bind("click", function(e){
+			$('#pureIds').val("");
+			$('#Dois').val("");
+		});
+		
+		
+		
+	
+	});
+
+</script>
+</html>
+

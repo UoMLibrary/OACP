@@ -2,12 +2,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: html_head">
 </head>
-
+<style>
+    .hiddendiv{
+        display: none;
+    }
+    .showdiv{
+        display: true;
+    }        
+</style>
 <body>
 	<header th:include="fragments/header :: menu"> </header>
 	<div class="container">
 		<h2>Search Publications</h2>
-	<form th:action="@{/publication/export}" th:object="${purerecord}" method="GET" class="border">
+	<form th:action="@{/publication/export}" th:object="${purerecord}" method="GET">
 			<table id="publicationSearch">
 					<tr>
 						<td class="pureid">
@@ -138,28 +145,55 @@
 							</select>
 						
 						</td>
-						
-					</tr>
-					<tr>
-						<td colspan="2">
-							<button type="submit" name="action" class="btn btn btn-primary" value="perPureId">
-								<i class="fas fa-file-export"></i> Export Excel According PureId
-							</button>
-						</td>
-						<td>
-							 <button type="submit"  name="action" value="perAuthor" class="btn btn btn-primary btnExport">
-								<i class="fas fa-file-export"></i> Export Excel According Author
-							</button>
-						</td>
-						<td style="text-align: right;">
+						<td valign="bottom" style="text-align: right">
 							<button type="button" class="btn btn-primary btnReset">Reset</button>
 						</td>
+						
 					</tr>
 			</table>
-
+			
+			<br/>
+			<div>
+			  <div class="row">
+			    <div class="col-sm">
+			    
+			 <div class="btn-group" role="group">
+							<button id="btnGroupDrop1" type="button"
+								class="btn btn-primary dropdown-toggle"
+								data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								Bulk Edit
+							</button>
+							<div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+								<button type="button" id="bulkEditRecordStatus" class="dropdown-item">
+									Record Status</button> 
+								<button type="button" id="bulkEditRefCompliance" class="dropdown-item">
+									REF Compliance Status</button> 
+								<button type="button" id=bulkEditUkriCompliance class="dropdown-item">
+									UKRI Compliance Status</button> 
+							</div>
+					</div>
+			      <button type="button" id="bulkEdit" class="btn btn btn-primary">Bulk Edit</button>
+			 
+			    </div>
+			    <div class="col-sm">
+			      <button type="submit" name="action" class="btn btn btn-primary" value="perPureId">
+								<i class="fas fa-file-export"></i> Export Excel According PureId
+				  </button>
+			    </div>
+			    <div class="col-sm">
+			     <button type="submit"  name="action" value="perAuthor" class="btn btn btn-primary btnExport">
+								<i class="fas fa-file-export"></i> Export Excel According Author
+				 </button>
+							
+			    </div>
+			  </div>
+			</div>
+	  
 		</form>
 		
 	</div>
+	 
 	<div class="listpublication">
 		<table class="display" id="publicationTable">
 			<thead>
@@ -191,6 +225,86 @@
 	<th:block th:replace="fragments/modal :: toast"></th:block>
 		
 	<th:block th:replace="fragments/modal :: modal('Notice')"></th:block>
+	
+	<div id="bulkEditMo" tabindex="-1" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel"
+	     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Publication Bulk Edit</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<label>Publication ID:</label><div class="pureids"></div>
+					<hr/>
+					<div class="row" id="editrecordStatus">
+				    <div class="col">
+				        <label>Record Status:</label> 
+				        <select class="form-control" id="recordStatus">
+							<option value="">--Please Select--</option>
+							<option value="AAM deposited - awaiting publication">AAM deposited - awaiting publication</option>
+							<option value="AAM deposited - published">AAM deposited - published</option>
+							<option value="Information required">Information required</option>
+						</select>
+						 
+				    </div>
+				   </div>
+				   <br/>
+				   <div class="row" id="editRefComStatus">
+				   	<div class="col">
+				        <label>REF Compliance Status:</label> 
+				        <select class="form-control" id="complianceStatus">
+							<option value="">--Please Select--</option>
+							<option value="Green - internal">Green - internal</option>
+							<option value="Green - external">Green - external</option>
+							<option value="Gold - internal">Gold - internal</option>
+							<option value="Gold - external">Gold - external</option>
+							<option value="Not compliant">Not compliant</option>
+							<option value="Exception applied">Exception applied</option>
+						</select>
+				    </div>
+				   </div>
+				    <br/>
+				   <div class="row" id="editUkriComplianceStatus">
+				     <div class="col-2">
+						<label>UKRI Flag</label>
+						<div class="btn-group btn-group-toggle show-ukriStatus" data-toggle="buttons">
+							<label class="btn btn-outline-dark active"> 
+							<input type="radio" name="ukriFlag" value="false" checked>No</label> 
+							<label class="btn btn-outline-dark"> 
+							<input type="radio" name="ukriFlag" value="true"> Yes
+							</label>
+						</div>
+					</div>
+				    <div class="col">
+				       <label>UKRI Compliance Status</label> 
+							<select id="ukricompliance" class="form-control" disabled>
+								<option value="" selected>--Please Select--</option>
+								<option value="Green - internal">Green - internal</option>
+								<option value="Green - external">Green - external</option>
+								<option value="Gold - internal">Gold - internal</option>
+								<option value="Gold - external">Gold - external</option>
+								<option value="Not compliant">Not compliant</option>
+								<option value="Exception applied">Exception applied</option>
+							</select>
+				    </div>
+				    <br/>
+				</div>
+	 <br/>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button  type="button" id="bulkEditSumit" class="btn btn-info">Confirm</button>
+			 	</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	
+
+	
 	<div id="loader" class="submit-progress">
 		<i class="fa fa-2x fa-spinner fa-spin"></i>
 		<label id="spinMes"> </label>
@@ -204,217 +318,5 @@
 	<footer class="footer" th:include="fragments/footer :: footer"></footer>
 
 </body>
-<script>
-	$(document).ready(function() {
-		var spinner = $('#loader');
-		
-		$("form").keypress(function(e) {
-			  //Enter key
-			  if (e.which == 13) {
-			    return false;
-			  }
-			});
-		
-		var table = $("#publicationTable").DataTable({
-			dom: '<"top"Blip>rt<"bottom"lp><"clear">',
-			processing: true,
-			serverSide: true,
-			ajax: {
-					url : "/publication/list",
-					 data: function ( d ) {
-		                    d.pureId = $('#col0_filter').val();
-		                    d.publicationStatus = $('#col1_filter').val();
-		                    d.record_status=$('#col3_filter').val();
-							d.compliance_status=$('#col4_filter').val();
-							d.UKRI_compliance_status=$('#col5_filter').val();
-							d.doi=$('#col10_filter').val();
-							d.organization=$('#col13_filter').val();
-							d.organizaitonlevel=$('#col13_filter option:checked').closest('optgroup').attr('value');
-							
-							d.help_raise_visibility= $('#col6_filter').val();
-							d.potentially_published= $('#col7_filter').val();
-							d.UKRI_S_Flag= $('#col8_filter').val();
-		                }
-				},
-				columns : [{
-					"data" : "pureId",
-						fnCreatedCell : function(nTd, sData,oData, iRow,iCol) {
-							$(nTd).html("<a href='/publications/"+oData.pureId+"'>"
-									+ oData.pureId+ "</a>");			
-						}
-					},
-					{"data" : "publicationStatus"},
-					{"data" : "title"},
-					{"data" : "record_status"},
-					{"data" : "compliance_status"},
-					{"data" : "ukri_compliance_status"},
-					{"data" : "acceptedDate"},
-					{"data" : "ePublicationDate"},
-					{"data" : "publicationDate"},
-					{"data" : "potentially_published"},
-					
-					{data : null,
-						defaultContent: "<i class='fas fa-sync' title='sync'/>",
-						orderable : false
-					},
-					{data : null,
-						defaultContent: '<i class="fas fa-trash-alt" title="delete"/>',
-						orderable : false
-					} ],
-					order : [ 0, "desc" ]
-		});
-		
-	$('#publicationTable tbody').on('click','.fa-sync',function() {
-		var data = table.row($(this).parents('tr')).data();
-		spinner.find("#spinMes").text("Sync Record: " + data.pureId);
-		spinner.css({ display: 'block'});
-		$.ajax({
-	        type: "GET",
-	        url:  "/publication/sync/"+data.pureId,
-	        success: function(data){
-	        	console.log("data: "+ data);
-	        	spinner.css({ display: 'none'});
-	        	 $('.toast').toast('show');
-				  $('.toast-title').text("Notification!");
-				  if(data == 'sync'){
-					  table.ajax.reload();
-					  $('.toast-body').text("Sync Record successfully!");
-				  }
-				  if(data == 'syncnopureID'){
-					  $('.toast-body').text("This PureId is not found from Pure APIS!");
-				  }
-				  if(data == 'syncuptodate'){
-					  $('.toast-body').text("This PureId is up to Date!");
-				  } 
-	        }
-		});
-			
-		});
-		
-	$('#publicationTable tbody').on('click','.fa-trash-alt',function() {
-		
-		var data = table.row($(this).parents('tr')).data();
-		$('#Notice').modal({
-			show : true
-		})
-		$('#Notice').find('#information').remove();
-		$('#Notice').find('.modal-title').text("Notification");
-		
-		$('#Notice').find('.modal-body').text("Are you sure you want to delete pureId: " + data.pureId);
-		
-		$('#Notice').find('#confirm').css({
-			"display" : "block"
-		});
-		
-		$('#Notice').find('#confirm').click(function(){
-			$.ajax({
-		        type: "GET",
-		        url:  "/publication/delete/"+data.pureId,
-		        success: function(data){
-		        	
-		           if(data=="delete"){
-		        	   table.ajax.reload();
-		        	   $('#Notice').modal('hide')
-		        	   $('.toast').toast('show');
-						  
-						$('.toast-title').text("Notification!");
-						$('.toast-body').text("Delete Records successfully!");
-		        	   
-		           }
-		        }
-		    });
-		});
-		
-	});
-	
-	
-	
-	$(".column_filter").bind("change keyup",function(event) {
-		table.ajax.reload();
-		
-		var searchFileds = {"pureId":$('#col0_filter').val(),
-				"publicationStatus":$('#col1_filter').val(),
-				"recordstatus":$('#col3_filter').val(),
-				"compliancestatus":$('#col4_filter').val(),
-				"UKRIcompliancestatus":$('#col5_filter').val(),
-				"doi":$('#col10_filter').val(),
-				"organization":$('#col13_filter').val(),
-				"helpraisevisibility":$('#col6_filter').val(),
-				"potentiallypublished":$('#col7_filter').val(),
-				"UKRISFlag":$('#col8_filter').val()};
-		localStorage.setItem("searchFileds", JSON.stringify(searchFileds));
-		
-	});
-	
-	
-
-	if(localStorage.getItem("searchFileds")){
-		var searchFiledsJson = JSON.parse(localStorage.getItem("searchFileds"));
-		$('#col0_filter').val(searchFiledsJson['pureId']);
-		$('#col1_filter').val(searchFiledsJson['publicationStatus']);
-		$('#col4_filter').val(searchFiledsJson['compliancestatus']);
-		$('#col3_filter').val(searchFiledsJson['recordstatus']);
-		$('#col5_filter').val(searchFiledsJson['UKRIcompliancestatus']);
-		$('#col10_filter').val(searchFiledsJson['doi']);
-		$('#col13_filter').val(searchFiledsJson['organization']);
-		$('#col6_filter').val(searchFiledsJson['helpraisevisibility']);
-		$('#col7_filter').val(searchFiledsJson['potentiallypublished']);
-		$('#col8_filter').val(searchFiledsJson['UKRISFlag']);
-		table.ajax.reload();
-	}
-
-
-	$(".btnReset").bind("click", function(event) {
-		 
-		$('#col0_filter').val("");
-        $('#col1_filter').val("");
-        $('#col3_filter').val("");
-		$('#col4_filter').val("");
-		$('#col5_filter').val("");
-		$('#col10_filter').val("");
-		$('#col13_filter').val("");
-		$('#col6_filter').val("");
-		$('#col7_filter').val("");
-		$('#col8_filter').val("");
-		localStorage.removeItem("searchFileds");
-		table.ajax.reload();
-		
-	}); 
-	
-	 
-	$('.btn-group label').click(
-		function(e) {
-			e.preventDefault();
-
-			var radio = $(this).find(
-					'input[type=radio]');
-
-			if (radio.is(':checked')) {
-				e.stopImmediatePropagation();
-				$(this).removeClass("active");
-				radio.prop('checked', false);
-				var id = $(this).parents('td').attr(
-						'data-column');
-				table.column(id).search("").draw();
-			} else {
-				radio.prop('checked', true);
-			}
-		});
-	
-	
-	  if($('#PublicationToast').length){
-	    	 
-			  var message = $('#message').val();
-			 
-			  if(message == 'delete'){
-				  $('.toast').toast('show');
-				  $('.toast-title').text("Notification!");
-				  $('.toast-body').text("Delete Record successfully!");
-			  }
-			    	
-	    }
-
-	});
-</script>
-
+<script src="../js/list_publication.js"></script>
 </html>
